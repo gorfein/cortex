@@ -8,6 +8,10 @@ Cortex fixes that.
 
 It's a self-hosted knowledge management platform that connects to [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (and any MCP-compatible client) via the [Model Context Protocol](https://modelcontextprotocol.io/). Agents document their work as they go — decisions, dead ends, results, open questions — and the next agent inherits all of it.
 
+![Cortex Topics Overview — 9 active projects with threads, decisions, and tasks tracked across domains](docs/images/topics-overview.png)
+
+*One Cortex instance managing trading strategies, ML research, product demos, and its own platform development — all cross-searchable.*
+
 ## Why Cortex?
 
 ### Your agents forget everything. Cortex doesn't.
@@ -26,9 +30,17 @@ Cortex's AI research pipeline doesn't just summarize the consensus. It includes 
 
 Most project documentation is aspirational fluff. Cortex's First Principles system forces testable, pass/fail success criteria with real numbers. Not "improve performance" but "achieve R@50 > 20% on cold-start users." An AI wizard helps you articulate these, then **Progress Scorecards** automatically evaluate how close you are — surfacing practical wins you can use *right now*, not just a status report.
 
+![Progress Scorecard with colored status badges and practical wins](docs/images/topic-scorecard.png)
+
+*Success criteria evaluated automatically. "Bottom Line" tells you exactly what to do next. Practical wins highlight what's already usable.*
+
 ### The compound effect.
 
 Each session makes the next one better. Agents document as they work (not after). Observations accumulate. Artifacts get refined. Dead ends get tagged. Over weeks, Cortex becomes the institutional memory that makes your AI workflow qualitatively different from vanilla Claude Code sessions. The 10th session on a topic is dramatically more productive than the 1st — because none of the context was lost.
+
+![AI Pipeline with scorecard badges, research status, and thread list](docs/images/topic-pipeline.png)
+
+*Scorecard badges (Achieved/Early/Blocked), AI Pipeline with one-click "Run Full Cycle", and thread history showing agent work sessions.*
 
 ## What It Does
 
