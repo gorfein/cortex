@@ -84,21 +84,43 @@ OPENAI_KEY=sk-your-key-here          # Required for AI features
 TAVILY_API_KEY=tvly-your-key-here    # Required for web research
 ```
 
-Then start the dev servers:
+Then start the dev servers (**keep this running** — Cortex must be running whenever your agents use it):
 ```powershell
 pnpm dev
 ```
 
-### Connect your other projects
+### Connect your projects to Cortex
 
-To give Claude Code agents in *any* project access to Cortex:
+Cortex is a **background service** that your other projects talk to. You don't do your day-to-day work inside the Cortex directory — you install Cortex once, leave it running, and then connect your actual projects to it.
+
+**Here's the workflow:**
+
+```
+┌─────────────────────┐     ┌─────────────────────────────────────────┐
+│  Cortex (this repo) │     │  Your Project (where you actually work) │
+│                     │     │                                         │
+│  1. setup.ps1       │     │  3. integrate.ps1 ← run this here      │
+│  2. pnpm dev        │────>│  4. Open Claude Code here               │
+│     (keep running)  │     │  5. Agent auto-connects to Cortex       │
+└─────────────────────┘     └─────────────────────────────────────────┘
+```
+
+**Step 3** is the key step. Open a terminal in your actual project and run:
 
 ```powershell
-cd C:\path\to\your-other-project
+cd C:\path\to\your-project
 C:\path\to\cortex\integrate.ps1
 ```
 
-This creates `.mcp.json` and `CLAUDE.md` in that project. See [Integrating Cortex Into Your Projects](#integrating-cortex-into-your-projects) for full details.
+This creates two files in your project:
+- **`.mcp.json`** — Tells Claude Code where Cortex is running (auto-detected)
+- **`CLAUDE.md`** — Tells agents how to use Cortex (documentation protocols, session workflow, tool usage)
+
+Then open Claude Code **in your project directory** (not in Cortex). The agent will automatically have access to all Cortex tools.
+
+> **Repeat for every project** you want connected. Each `integrate.ps1` run takes seconds and merges cleanly with existing files.
+
+See [Integrating Cortex Into Your Projects](#integrating-cortex-into-your-projects) for the full reference.
 
 ### Access
 
