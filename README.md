@@ -1,8 +1,34 @@
 # Cortex
 
-Workspace-scoped knowledge management for AI-augmented teams.
+**Persistent memory for AI agents. Cross-project intelligence that compounds.**
 
-Cortex is a self-hosted platform that gives your AI agents persistent memory across projects. It connects to [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (and any MCP-compatible client) via the [Model Context Protocol](https://modelcontextprotocol.io/), letting agents create threads, document decisions, track tasks, and build institutional knowledge that compounds over time.
+Every time you start a Claude Code session, your agent starts from zero. It doesn't know what you tried last week, what failed, what worked, or what another agent discovered in a different project. You re-explain context. It re-derives conclusions. You both waste time.
+
+Cortex fixes that.
+
+It's a self-hosted knowledge management platform that connects to [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (and any MCP-compatible client) via the [Model Context Protocol](https://modelcontextprotocol.io/). Agents document their work as they go — decisions, dead ends, results, open questions — and the next agent inherits all of it.
+
+## Why Cortex?
+
+### Your agents forget everything. Cortex doesn't.
+
+Without Cortex, every session is a cold start. Agents re-explore dead ends, re-derive decisions, and lose the thread of multi-session work. With Cortex, agents call `cortex_get_context` and immediately know: what's been tried, what failed, what the plan is, and what's off-limits.
+
+### Cross-project pollination creates genuinely new ideas.
+
+This is the part most people miss. When your trading strategy agent can search research from your recommendation system project — when your data pipeline agent can read architecture decisions from your web app — unexpected connections happen. A matrix decomposition technique from one project becomes a feature engineering approach in another. A failure mode documented in Project A prevents a week of wasted work in Project B. **Cortex doesn't just remember. It cross-pollinates.**
+
+### Built-in contrarian thinking.
+
+Cortex's AI research pipeline doesn't just summarize the consensus. It includes a **critic persona** that automatically reviews every research synthesis and every project plan, challenging assumptions and flagging weak reasoning. The researcher is prompted to make forced-rank commitments (not hedge everything), and the critic holds it accountable. Dead ends are tagged `negative-result` so future agents know what NOT to try — and more importantly, *why* it failed and under what conditions it might be worth revisiting.
+
+### First Principles that actually work.
+
+Most project documentation is aspirational fluff. Cortex's First Principles system forces testable, pass/fail success criteria with real numbers. Not "improve performance" but "achieve R@50 > 20% on cold-start users." An AI wizard helps you articulate these, then **Progress Scorecards** automatically evaluate how close you are — surfacing practical wins you can use *right now*, not just a status report.
+
+### The compound effect.
+
+Each session makes the next one better. Agents document as they work (not after). Observations accumulate. Artifacts get refined. Dead ends get tagged. Over weeks, Cortex becomes the institutional memory that makes your AI workflow qualitatively different from vanilla Claude Code sessions. The 10th session on a topic is dramatically more productive than the 1st — because none of the context was lost.
 
 ## What It Does
 
@@ -12,6 +38,8 @@ Cortex is a self-hosted platform that gives your AI agents persistent memory acr
 - **First Principles** -- Define guiding beliefs and testable success criteria for each topic. AI-assisted wizard helps you articulate what "done" looks like.
 - **Progress Scorecards** -- Automated evaluation of how close each topic is to meeting its success criteria, with practical wins highlighted.
 - **Cross-Project Memory** -- One Cortex instance serves all your projects. Agents in Project A can search for decisions made in Project B.
+- **Negative Result Tracking** -- Dead ends are first-class citizens. Tagged, searchable, and surfaced in briefings so no agent ever re-explores a known failure.
+- **Session Audit** -- Every session ends with an automated quality check: did you document findings? Tag dead ends? Create follow-up tasks? Promote key observations to artifacts?
 
 ## Quick Start (Windows)
 
@@ -81,7 +109,7 @@ pnpm build:mcp
 
 # 6. Create API key for MCP (after starting the API)
 #    Login at http://localhost:5173, then use the API:
-#    POST /v1/auth/api-keys  { "handle": "mcp-agent", "display_name": "MCP Agent" }
+#    POST /v1/auth/api-keys  { "name": "mcp-agent" }
 #    Copy the returned api_key into .mcp.json
 
 # 7. Start
