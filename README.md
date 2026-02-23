@@ -89,6 +89,17 @@ Then start the dev servers:
 pnpm dev
 ```
 
+### Connect your other projects
+
+To give Claude Code agents in *any* project access to Cortex:
+
+```powershell
+cd C:\path\to\your-other-project
+C:\path\to\cortex\integrate.ps1
+```
+
+This creates `.mcp.json` and `CLAUDE.md` in that project. See [Integrating Cortex Into Your Projects](#integrating-cortex-into-your-projects) for full details.
+
 ### Access
 
 | Service | URL |
@@ -130,67 +141,71 @@ pnpm dev
 
 ## Integrating Cortex Into Your Projects
 
-Cortex only becomes valuable when your agents actually use it. This requires two files in each project's working directory:
+Cortex only becomes valuable when your AI agents actually use it. Every project you want connected needs two files: `.mcp.json` (tells Claude Code where Cortex is) and `CLAUDE.md` (tells agents *how* to use it). A script does this for you.
 
-### Step 1: Add `.mcp.json` to your project
+### One command — any project
 
-Every project that should connect to Cortex needs an `.mcp.json` in its root. This tells Claude Code how to start the MCP server.
+```powershell
+cd C:\path\to\your-project
+C:\path\to\cortex\integrate.ps1
+```
 
-Copy the `cortex` entry from the Cortex repo's `.mcp.json` into your project's `.mcp.json`:
+That's it. The script:
+- Creates or updates `.mcp.json` with the Cortex MCP server connection (auto-detects your API key and paths)
+- Creates or updates `CLAUDE.md` with agent instructions (how to use Cortex tools, documentation protocols, session workflow)
+- Merges cleanly if your project already has `.mcp.json` or `CLAUDE.md` — existing content is preserved
 
+You can also run it from the Cortex directory:
+```powershell
+.\integrate.ps1 -TargetDir C:\path\to\your-project
+```
+
+> **Prerequisite:** Cortex must be installed first (`setup.ps1`). The Cortex API must be running (`pnpm dev` in the Cortex directory) whenever agents use the tools.
+
+### What the integration creates
+
+**`.mcp.json`** — Machine-specific config that tells Claude Code how to launch the Cortex MCP server:
 ```json
 {
   "mcpServers": {
     "cortex": {
       "command": "node",
-      "args": ["C:\\path\\to\\cortex\\packages\\mcp\\start.js"],
+      "args": ["C:\\your-machine\\path\\to\\cortex\\packages\\mcp\\start.js"],
       "env": {
         "CORTEX_API_URL": "http://localhost:3000/v1",
-        "CORTEX_API_KEY": "your-api-key-from-setup"
+        "CORTEX_API_KEY": "ctx_your-api-key-here"
       }
     }
   }
 }
 ```
+> Add `.mcp.json` to your project's `.gitignore` — it contains an API key and machine-specific paths.
 
-> **Important:** The `args` path must be the **absolute path** to `start.js` on your machine. The `setup.ps1` script generates this automatically for the Cortex project itself — for other projects, copy the path from the Cortex `.mcp.json`.
-
-If your project already has an `.mcp.json` with other servers, just add the `"cortex"` entry inside `"mcpServers"`.
-
-### Step 2: Add Cortex instructions to your `CLAUDE.md`
-
-The `.mcp.json` gives agents *access* to Cortex tools, but agents won't use them well without instructions. Add the Cortex integration snippet to your project's `CLAUDE.md`.
-
-The full snippet is in [`cortex-claude-snippet.md`](cortex-claude-snippet.md) — copy its entire contents and append it to your project's `CLAUDE.md`. This tells agents to:
-
-- **Call `cortex_get_context` at the start of every session** (mandatory — this is how agents orient to shared knowledge)
+**`CLAUDE.md`** — Instructions that tell agents to:
+- **Call `cortex_get_context` at the start of every session** (mandatory — orients the agent to shared knowledge)
 - **Document continuously** — create threads, post observations, tag dead ends as they work
 - **Check for prior work** before starting new approaches (prevents re-exploring known failures)
 - **Run session audits** before ending sessions (ensures documentation quality)
 - **Respect the authority hierarchy** — First Principles > Human comments > AI-generated content
 
-Here's a minimal version if you want something shorter:
+The full instruction set is in [`cortex-claude-snippet.md`](cortex-claude-snippet.md). The `integrate.ps1` script copies it automatically.
 
-```markdown
-# Cortex Knowledge Base
+### After integration: create a topic
 
-This project is connected to Cortex for cross-project knowledge management.
+Each project should have its own Cortex topic. You can either:
+- Create one in the web UI at http://localhost:5173/topics → "New Topic"
+- Tell your agent to create one — the CLAUDE.md instructions tell agents to ask you first before creating a new topic
+- Use the AI topic generator ("AI Describe" button) which creates first principles and success criteria automatically
 
-## Session Start (MANDATORY)
-Call `cortex_get_context` at the start of every session before doing anything else.
+### Verify it works
 
-## Continuous Documentation
-- Create a thread (`cortex_create_thread`) at the start of non-trivial work
-- Post observations (`cortex_observe`) after each significant step
-- Tag dead ends with `sub_type: "negative-result"`
-- Before ending: run `cortex_session_complete`, then resolve thread with summary
+Open Claude Code in the integrated project and say:
+
+```
+Call cortex_get_context to check the knowledge base connection.
 ```
 
-### Step 3: Create a Cortex topic for your project
-
-Each project should have its own topic in Cortex. You can either:
-- Create one in the web UI at http://localhost:5173/topics ("New Topic")
-- Let your agent create one — the CLAUDE.md instructions tell agents to ask you before creating a new topic
+The agent should return a workspace overview showing your topics, recent threads, and open tasks. If it works, integration is complete.
 
 ### What your agents get
 
