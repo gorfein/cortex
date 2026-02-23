@@ -2,66 +2,20 @@
 
 **Persistent memory for AI agents. Cross-project intelligence that compounds.**
 
-Every time you start a Claude Code session, your agent starts from zero. It doesn't know what you tried last week, what failed, what worked, or what another agent discovered in a different project. You re-explain context. It re-derives conclusions. You both waste time.
-
-Cortex fixes that.
-
-It's a self-hosted knowledge management platform that connects to [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (and any MCP-compatible client) via the [Model Context Protocol](https://modelcontextprotocol.io/). Agents document their work as they go — decisions, dead ends, results, open questions — and the next agent inherits all of it.
-
 ![Cortex Topics Overview — 9 active projects with threads, decisions, and tasks tracked across domains](docs/images/topics-overview.png)
 
-*One Cortex instance managing trading strategies, ML research, product demos, and its own platform development — all cross-searchable.*
+## Get Started in 5 Minutes
 
-## Why Cortex?
+### What you need first
 
-### Your agents forget everything. Cortex doesn't.
+- [Node.js 20+](https://nodejs.org/) installed
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
+- An [OpenAI API key](https://platform.openai.com/api-keys) (for AI research features)
+- A [Tavily API key](https://tavily.com/) (for web search — free tier works)
 
-Without Cortex, every session is a cold start. Agents re-explore dead ends, re-derive decisions, and lose the thread of multi-session work. With Cortex, agents call `cortex_get_context` and immediately know: what's been tried, what failed, what the plan is, and what's off-limits.
+### Install Cortex
 
-### Cross-project pollination creates genuinely new ideas.
-
-This is the part most people miss. When your trading strategy agent can search research from your recommendation system project — when your data pipeline agent can read architecture decisions from your web app — unexpected connections happen. A matrix decomposition technique from one project becomes a feature engineering approach in another. A failure mode documented in Project A prevents a week of wasted work in Project B. **Cortex doesn't just remember. It cross-pollinates.**
-
-### Built-in contrarian thinking.
-
-Cortex's AI research pipeline doesn't just summarize the consensus. It includes a **critic persona** that automatically reviews every research synthesis and every project plan, challenging assumptions and flagging weak reasoning. The researcher is prompted to make forced-rank commitments (not hedge everything), and the critic holds it accountable. Dead ends are tagged `negative-result` so future agents know what NOT to try — and more importantly, *why* it failed and under what conditions it might be worth revisiting.
-
-### First Principles that actually work.
-
-Most project documentation is aspirational fluff. Cortex's First Principles system forces testable, pass/fail success criteria with real numbers. Not "improve performance" but "achieve R@50 > 20% on cold-start users." An AI wizard helps you articulate these, then **Progress Scorecards** automatically evaluate how close you are — surfacing practical wins you can use *right now*, not just a status report.
-
-![Progress Scorecard with colored status badges and practical wins](docs/images/topic-scorecard.png)
-
-*Success criteria evaluated automatically. "Bottom Line" tells you exactly what to do next. Practical wins highlight what's already usable.*
-
-### The compound effect.
-
-Each session makes the next one better. Agents document as they work (not after). Observations accumulate. Artifacts get refined. Dead ends get tagged. Over weeks, Cortex becomes the institutional memory that makes your AI workflow qualitatively different from vanilla Claude Code sessions. The 10th session on a topic is dramatically more productive than the 1st — because none of the context was lost.
-
-![AI Pipeline with scorecard badges, research status, and thread list](docs/images/topic-pipeline.png)
-
-*Scorecard badges (Achieved/Early/Blocked), AI Pipeline with one-click "Run Full Cycle", and thread history showing agent work sessions.*
-
-## What It Does
-
-- **Threads & Observations** -- Agents document their work in real time: what they tried, what worked, what failed. The next agent picks up where the last one left off.
-- **Artifacts** -- Polished knowledge assets (architecture decisions, procedures, glossaries) that persist across sessions and projects.
-- **AI Research Pipeline** -- Built-in research, planning, critique, and scoring powered by GPT-5.2. Generate project plans, run automated research with web search, and track progress against success criteria.
-- **First Principles** -- Define guiding beliefs and testable success criteria for each topic. AI-assisted wizard helps you articulate what "done" looks like.
-- **Progress Scorecards** -- Automated evaluation of how close each topic is to meeting its success criteria, with practical wins highlighted.
-- **Cross-Project Memory** -- One Cortex instance serves all your projects. Agents in Project A can search for decisions made in Project B.
-- **Negative Result Tracking** -- Dead ends are first-class citizens. Tagged, searchable, and surfaced in briefings so no agent ever re-explores a known failure.
-- **Session Audit** -- Every session ends with an automated quality check: did you document findings? Tag dead ends? Create follow-up tasks? Promote key observations to artifacts?
-
-## Quick Start (Windows)
-
-### Prerequisites
-
-- [Node.js 20+](https://nodejs.org/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for PostgreSQL)
-- [pnpm](https://pnpm.io/) (installed automatically if missing)
-
-### Automated Setup
+Open a terminal and run:
 
 ```powershell
 git clone https://github.com/gorfein/cortex.git
@@ -69,31 +23,138 @@ cd cortex
 .\setup.ps1
 ```
 
-The setup script will:
-1. Verify Node.js and pnpm are installed
-2. Start PostgreSQL in Docker
-3. Create `.env` with a generated JWT secret
-4. Install dependencies
-5. Run database migrations and seed data
-6. Build the MCP server
-7. Generate `.mcp.json` with a fresh API key
-
-After setup, edit `.env` to add your API keys:
+When it finishes, edit `cortex\.env` and paste in your API keys:
 ```
-OPENAI_KEY=sk-your-key-here          # Required for AI features
-TAVILY_API_KEY=tvly-your-key-here    # Required for web research
+OPENAI_KEY=sk-your-actual-key
+TAVILY_API_KEY=tvly-your-actual-key
 ```
 
-Then start the dev servers (**keep this running** — Cortex must be running whenever your agents use it):
+Then start Cortex (**leave this terminal open** — Cortex runs as a background service):
 ```powershell
 pnpm dev
 ```
 
-### Connect your projects to Cortex
+### Connect a project to Cortex
 
-Cortex is a **background service** that your other projects talk to. You don't do your day-to-day work inside the Cortex directory — you install Cortex once, leave it running, and then connect your actual projects to it.
+Now go to any project you want to give persistent memory to:
 
-**Here's the workflow:**
+```powershell
+cd C:\path\to\your-project
+C:\path\to\cortex\integrate.ps1
+```
+
+**Done.** Open Claude Code in that project directory. The agent automatically has access to Cortex.
+
+> Repeat `integrate.ps1` for every project you want connected. It takes seconds.
+
+### Give this to your Claude Code agent
+
+If you want your Claude Code agent to handle the entire setup for you, open Claude Code in any directory and paste this (fill in the blanks):
+
+```
+Clone and install Cortex from https://github.com/gorfein/cortex.git
+
+1. Clone the repo to C:\Users\me\cortex (or wherever you prefer)
+2. Run .\setup.ps1 in the cloned directory
+3. Edit .env and set:
+   OPENAI_KEY=__paste_your_openai_key__
+   TAVILY_API_KEY=__paste_your_tavily_key__
+4. Run `pnpm dev` in the background to start the Cortex server
+5. Run .\integrate.ps1 -TargetDir __paste_this_project_path__ to connect this project
+6. Verify by calling cortex_get_context
+
+Prerequisites: Node.js 20+, Docker Desktop (must be running), pnpm.
+Login: admin@cortex.local / admin123
+```
+
+### Verify it works
+
+In Claude Code (in your integrated project), say:
+```
+Call cortex_get_context to see the knowledge base.
+```
+
+If you see a workspace overview with topics — you're done.
+
+| Service | URL |
+|---------|-----|
+| Web UI | http://localhost:5173 |
+| API | http://localhost:3000 |
+| **Login** | `admin@cortex.local` / `admin123` |
+
+---
+
+## Why Cortex?
+
+Every time you start a Claude Code session, your agent starts from zero. It doesn't know what you tried last week, what failed, what worked, or what another agent discovered in a different project. You re-explain context. It re-derives conclusions. You both waste time. Cortex fixes that.
+
+It's a self-hosted platform that connects to [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (and any MCP-compatible client) via the [Model Context Protocol](https://modelcontextprotocol.io/). Agents document their work as they go — decisions, dead ends, results, open questions — and the next agent inherits all of it.
+
+### Cross-project pollination creates genuinely new ideas
+
+This is the part most people miss. When your trading strategy agent can search research from your recommendation system project — when your data pipeline agent can read architecture decisions from your web app — unexpected connections happen. A matrix decomposition technique from one project becomes a feature engineering approach in another. A failure mode documented in Project A prevents a week of wasted work in Project B. **Cortex doesn't just remember. It cross-pollinates.**
+
+### Built-in contrarian thinking
+
+Cortex's AI research pipeline doesn't just summarize the consensus. It includes a **critic persona** that automatically challenges every research synthesis and project plan. Dead ends are tagged `negative-result` so future agents know what NOT to try — and more importantly, *why* it failed and under what conditions it might be worth revisiting.
+
+### First Principles that actually work
+
+Most project documentation is aspirational fluff. Cortex forces testable, pass/fail success criteria with real numbers. Not "improve performance" but "achieve R@50 > 20% on cold-start users." **Progress Scorecards** automatically evaluate how close you are — surfacing practical wins you can use *right now*.
+
+![Progress Scorecard with colored status badges and practical wins](docs/images/topic-scorecard.png)
+
+### The compound effect
+
+Each session makes the next one better. Agents document as they work (not after). Observations accumulate. Dead ends get tagged. Over weeks, Cortex becomes institutional memory that makes your AI workflow qualitatively different from vanilla sessions. The 10th session on a topic is dramatically more productive than the 1st.
+
+![AI Pipeline with scorecard badges, research status, and thread list](docs/images/topic-pipeline.png)
+
+## Features
+
+- **Threads & Observations** -- Agents document their work in real time. The next agent picks up where the last one left off.
+- **Artifacts** -- Polished knowledge assets (decisions, procedures, glossaries) that persist across sessions and projects.
+- **AI Research Pipeline** -- Research, planning, critique, and scoring powered by GPT-5.2 with web search.
+- **First Principles** -- Testable success criteria with an AI wizard. Not aspirations — pass/fail tests with numbers.
+- **Progress Scorecards** -- Automated evaluation with practical wins highlighted.
+- **Cross-Project Memory** -- One instance serves all projects. Agents in Project A search decisions from Project B.
+- **Negative Result Tracking** -- Dead ends are first-class citizens. Tagged, searchable, never re-explored.
+- **Session Audit** -- Automated quality check at session end.
+
+## Setup Reference
+
+<details>
+<summary><b>What setup.ps1 does</b> (click to expand)</summary>
+
+1. Checks Node.js 20+ and pnpm (installs pnpm if missing)
+2. Starts PostgreSQL via Docker Compose
+3. Creates `.env` with auto-generated JWT secret
+4. Runs `pnpm install`
+5. Runs database migrations and seed
+6. Builds the MCP server
+7. Creates an API key and generates `.mcp.json`
+
+</details>
+
+<details>
+<summary><b>Manual setup</b> (without setup.ps1)</summary>
+
+```powershell
+docker compose up -d
+copy .env.example .env
+# Edit .env: add OPENAI_KEY, TAVILY_API_KEY, change JWT_SECRET
+pnpm install
+pnpm migrate
+pnpm seed
+pnpm build:mcp
+pnpm dev
+# Then create API key: POST /v1/auth/api-keys { "name": "mcp-agent" }
+# Copy the key into .mcp.json
+```
+
+</details>
+
+### How it fits together
 
 ```
 ┌─────────────────────┐     ┌─────────────────────────────────────────┐
@@ -105,133 +166,25 @@ Cortex is a **background service** that your other projects talk to. You don't d
 └─────────────────────┘     └─────────────────────────────────────────┘
 ```
 
-**Step 3** is the key step. Open a terminal in your actual project and run:
+Cortex is a background service. You install it once, leave `pnpm dev` running, then work in your project directories. The `integrate.ps1` script creates two files in each project:
+- **`.mcp.json`** — Tells Claude Code how to connect to Cortex (paths + API key, auto-detected)
+- **`CLAUDE.md`** — Tells agents how to use Cortex (documentation protocols, session workflow, 22+ tools)
+
+> Add `.mcp.json` to your project's `.gitignore` — it contains an API key and machine-specific paths.
+
+### integrate.ps1 reference
 
 ```powershell
-cd C:\path\to\your-project
+# From your project directory:
 C:\path\to\cortex\integrate.ps1
-```
 
-This creates two files in your project:
-- **`.mcp.json`** — Tells Claude Code where Cortex is running (auto-detected)
-- **`CLAUDE.md`** — Tells agents how to use Cortex (documentation protocols, session workflow, tool usage)
-
-Then open Claude Code **in your project directory** (not in Cortex). The agent will automatically have access to all Cortex tools.
-
-> **Repeat for every project** you want connected. Each `integrate.ps1` run takes seconds and merges cleanly with existing files.
-
-See [Integrating Cortex Into Your Projects](#integrating-cortex-into-your-projects) for the full reference.
-
-### Access
-
-| Service | URL |
-|---------|-----|
-| Web UI | http://localhost:5173 |
-| API | http://localhost:3000 |
-| **Login** | `admin@cortex.local` / `admin123` |
-
-### Manual Setup
-
-If you prefer not to use the setup script:
-
-```powershell
-# 1. Start PostgreSQL
-docker compose up -d
-
-# 2. Create .env
-copy .env.example .env
-# Edit .env: add your OPENAI_KEY, TAVILY_API_KEY, and change JWT_SECRET
-
-# 3. Install & build
-pnpm install
-
-# 4. Database
-pnpm migrate
-pnpm seed
-
-# 5. Build MCP server
-pnpm build:mcp
-
-# 6. Create API key for MCP (after starting the API)
-#    Login at http://localhost:5173, then use the API:
-#    POST /v1/auth/api-keys  { "name": "mcp-agent" }
-#    Copy the returned api_key into .mcp.json
-
-# 7. Start
-pnpm dev
-```
-
-## Integrating Cortex Into Your Projects
-
-Cortex only becomes valuable when your AI agents actually use it. Every project you want connected needs two files: `.mcp.json` (tells Claude Code where Cortex is) and `CLAUDE.md` (tells agents *how* to use it). A script does this for you.
-
-### One command — any project
-
-```powershell
-cd C:\path\to\your-project
-C:\path\to\cortex\integrate.ps1
-```
-
-That's it. The script:
-- Creates or updates `.mcp.json` with the Cortex MCP server connection (auto-detects your API key and paths)
-- Creates or updates `CLAUDE.md` with agent instructions (how to use Cortex tools, documentation protocols, session workflow)
-- Merges cleanly if your project already has `.mcp.json` or `CLAUDE.md` — existing content is preserved
-
-You can also run it from the Cortex directory:
-```powershell
+# Or from the Cortex directory:
 .\integrate.ps1 -TargetDir C:\path\to\your-project
 ```
 
-> **Prerequisite:** Cortex must be installed first (`setup.ps1`). The Cortex API must be running (`pnpm dev` in the Cortex directory) whenever agents use the tools.
+Merges cleanly with existing `.mcp.json` and `CLAUDE.md`. Safe to run multiple times.
 
-### What the integration creates
-
-**`.mcp.json`** — Machine-specific config that tells Claude Code how to launch the Cortex MCP server:
-```json
-{
-  "mcpServers": {
-    "cortex": {
-      "command": "node",
-      "args": ["C:\\your-machine\\path\\to\\cortex\\packages\\mcp\\start.js"],
-      "env": {
-        "CORTEX_API_URL": "http://localhost:3000/v1",
-        "CORTEX_API_KEY": "ctx_your-api-key-here"
-      }
-    }
-  }
-}
-```
-> Add `.mcp.json` to your project's `.gitignore` — it contains an API key and machine-specific paths.
-
-**`CLAUDE.md`** — Instructions that tell agents to:
-- **Call `cortex_get_context` at the start of every session** (mandatory — orients the agent to shared knowledge)
-- **Document continuously** — create threads, post observations, tag dead ends as they work
-- **Check for prior work** before starting new approaches (prevents re-exploring known failures)
-- **Run session audits** before ending sessions (ensures documentation quality)
-- **Respect the authority hierarchy** — First Principles > Human comments > AI-generated content
-
-The full instruction set is in [`cortex-claude-snippet.md`](cortex-claude-snippet.md). The `integrate.ps1` script copies it automatically.
-
-### After integration: create a topic
-
-Each project should have its own Cortex topic. You can either:
-- Create one in the web UI at http://localhost:5173/topics → "New Topic"
-- Tell your agent to create one — the CLAUDE.md instructions tell agents to ask you first before creating a new topic
-- Use the AI topic generator ("AI Describe" button) which creates first principles and success criteria automatically
-
-### Verify it works
-
-Open Claude Code in the integrated project and say:
-
-```
-Call cortex_get_context to check the knowledge base connection.
-```
-
-The agent should return a workspace overview showing your topics, recent threads, and open tasks. If it works, integration is complete.
-
-### What your agents get
-
-Once integrated, agents in any project have access to 22+ MCP tools:
+### What your agents get (22+ tools)
 
 | Tool | Purpose |
 |------|---------|
@@ -245,12 +198,6 @@ Once integrated, agents in any project have access to 22+ MCP tools:
 | `cortex_create_task` | Track follow-up work |
 | `cortex_checkpoint` | Record progress during long sessions |
 | `cortex_session_complete` | Audit session documentation quality |
-| `cortex_create_knowledge_link` | Link related artifacts (supports, contradicts, supersedes) |
-| `cortex_ask` | Query the knowledge base with natural language |
-
-### The integration payoff
-
-On day 1, Cortex is a note-taking tool. By week 2, it's the reason your agent in Project B knows about a failure mode discovered in Project A — without you having to remember or re-explain it. The cross-project search is where genuinely new connections happen: a technique from one domain sparks an insight in another.
 
 ## Architecture
 
