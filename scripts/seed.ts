@@ -61,6 +61,15 @@ async function seed() {
       console.log('  Password: admin123');
     }
 
+    // Ensure AI config exists for this workspace
+    // (migration 004 seeds ai_config for workspaces that exist at migration time,
+    //  but on a fresh install the workspace is created here AFTER migrations run)
+    await pool.query(
+      `INSERT INTO ai_config (workspace_id) VALUES ($1) ON CONFLICT (workspace_id) DO NOTHING`,
+      [workspaceId]
+    );
+    console.log('AI config ensured for workspace');
+
     // Create default topics
     const defaultTopics = [
       { handle: 'architecture', name: 'Architecture', description: 'System design decisions and patterns', icon: '🏗️' },

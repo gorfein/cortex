@@ -67,6 +67,15 @@ async function seed() {
       [workspaceId, userRows[0].id]
     );
 
+    // Ensure AI config exists for this workspace
+    // (migration 004 seeds ai_config for workspaces that exist at migration time,
+    //  but on a fresh install the workspace is created here AFTER migrations run)
+    await pool.query(
+      `INSERT INTO ai_config (workspace_id) VALUES ($1) ON CONFLICT (workspace_id) DO NOTHING`,
+      [workspaceId]
+    );
+    console.log('AI config ensured for workspace');
+
     if (topicRows.length > 0) {
       console.log(`Created topic 'General': ${topicRows[0].id}`);
 
