@@ -223,7 +223,7 @@ if ($apiReady) {
         $token = $loginResponse.access_token
 
         # Create API key
-        $keyBody = @{ handle = "mcp-agent"; display_name = "MCP Agent" } | ConvertTo-Json
+        $keyBody = @{ name = "mcp-agent" } | ConvertTo-Json
         $headers = @{ Authorization = "Bearer $token" }
         $keyResponse = Invoke-RestMethod -Uri "$apiUrl/auth/api-keys" -Method Post -Body $keyBody -ContentType "application/json" -Headers $headers
         $apiKey = $keyResponse.api_key
